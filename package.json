@@ -1,0 +1,22 @@
+{
+  "name": "team-generator",
+  "version": "1.0.0",
+  "description": "Auto builds a webpage showing off your team",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delizoderek/team-generator.git"
+  },
+  "author": "delizoderek",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/delizoderek/team-generator/issues"
+  },
+  "homepage": "https://github.com/delizoderek/team-generator#readme",
+  "dependencies": {
+    "inquirer": "^8.1.2"
+  }
+}
