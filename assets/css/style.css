@@ -1,0 +1,36 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+body{
+    background-color: aquamarine;
+}
+
+header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    color:white;
+}
+
+.bg-gradient{
+    background: linear-gradient(36deg, purple, red);
+}
+
+.team-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card{
+    display: flex;
+    flex-direction: column;
+    background: white;
+    min-height: 120px;
+    min-width: 60px;
+}
