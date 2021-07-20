@@ -1,6 +1,6 @@
 const inquire = require("inquirer");
+const htmlBuilder = require("./assets/utils/htmlBuilder");
 // TODO: Initial team manager question
-
 const commonQuestion = {
   type: "list",
   name: "keepBuilding",
@@ -113,8 +113,6 @@ const init = async () => {
     fullTeam.manager.id = managerPromise.managerId;
     fullTeam.manager.office = managerPromise.officeNumber;
     fullTeam.manager.email = managerPromise.managerEmail;
-    console.log(fullTeam.teamName);
-    console.log(fullTeam.manager);
     memberRole = managerPromise.keepBuilding;
   } else {
     contTeamBuilding = false;
@@ -130,8 +128,6 @@ const init = async () => {
     newMember.email = memberPromise.memberEmail;
     newMember.github = memberPromise.memberGit;
 
-    console.log(newMember);
-
     fullTeam.members.push(newMember);
 
     if (memberPromise.keepBuilding === "w") {
@@ -140,6 +136,8 @@ const init = async () => {
       memberRole = memberPromise.keepBuilding;
     }
   }
+  let htmlGenerator = new htmlBuilder(fullTeam);
+  console.log(htmlGenerator.renderHtml());
 };
 // TODO: Team member loop for adding multiple team members
 // TODO: Create webpage template
