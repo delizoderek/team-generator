@@ -1,3 +1,10 @@
+:root{
+    --primary: #053742;
+    --secondary: #39A2DB;
+    --cold-color: #A2DBFA;
+    --winter-color: #E8F0F2;
+}
+
 *{
     margin: 0px;
     padding: 0px;
@@ -5,20 +12,47 @@
     box-sizing: border-box;
 }
 
-body{
-    background-color: aquamarine;
-}
-
 header{
     display: flex;
     justify-content: center;
     align-items: center;
     height: 10vh;
-    color:white;
 }
 
-.bg-gradient{
-    background: linear-gradient(36deg, purple, red);
+.primary-bg{
+    background: var(--primary);
+}
+
+.secondary-bg{
+    background: var(--secondary);
+}
+
+.cold-bg{
+    background: var(--cold-color);
+}
+
+.winter-bg{
+    background: var(--winter-color);
+}
+
+.primary-text{
+    color: var(--primary);
+}
+
+.secondary-text{
+    color: var(--secondary);
+}
+
+.cold-text{
+    color: var(--cold-color);
+}
+
+.winter-text{
+    color: var(--winter-color);
+}
+
+.secondary-border{
+    border-color: var(--secondary);
 }
 
 .team-section{
@@ -29,8 +63,6 @@ header{
 }
 
 .card-header{
-    background: blue;
-    color: white;
     padding: 10px;
     border-radius: 5px;
 }

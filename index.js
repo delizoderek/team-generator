@@ -1,5 +1,6 @@
 const inquire = require("inquirer");
-const htmlBuilder = require("./assets/utils/htmlBuilder");
+const fs = require('fs');
+const htmlBuilder = require("./lib/htmlBuilder");
 // TODO: Initial team manager question
 const commonQuestion = {
   type: "list",
@@ -54,6 +55,13 @@ const managerQuestions = [
     type: "input",
     name: "managerEmail",
     message: "What is your email?",
+    validate: (val) => {
+      if(val.match("^[^@\s]+@[^@\s]+\.[^@\s]+$") === null){
+        return 'please enter a valid email address';
+      } else {
+        return true;
+      }
+    }
   },
   commonQuestion,
 ];
@@ -73,6 +81,13 @@ const memberQuestions = [
     type: "input",
     name: "memberEmail",
     message: "What is their email?",
+    validate: (val) => {
+      if(val.match("^[^@\s]+@[^@\s]+\.[^@\s]+$") === null){
+        return 'please enter a valid email address';
+      } else {
+        return true;
+      }
+    }
   },
   {
     type: "input",
@@ -82,10 +97,42 @@ const memberQuestions = [
   commonQuestion,
 ];
 
+const internQuestions = [
+  {
+    type: "input",
+    name: "internName",
+    message: "What is their name?",
+  },
+  {
+    type: "number",
+    name: "memberId",
+    message: "What is their ID?",
+  },
+  {
+    type: "input",
+    name: "memberEmail",
+    message: "What is their email?",
+    validate: (val) => {
+      if(val.match("^[^@\s]+@[^@\s]+\.[^@\s]+$") === null){
+        return 'please enter a valid email address';
+      } else {
+        return true;
+      }
+    }
+  },
+  {
+    type: "input",
+    name: "memberGit",
+    message: "What school did they attend?",
+  },
+  commonQuestion,
+];
+
 const fullTeam = {
   teamName: "",
   manager: new Manager(),
-  members: [],
+  engineers: [],
+  interns: [],
 };
 
 function Manager() {
@@ -136,12 +183,11 @@ const init = async () => {
       memberRole = memberPromise.keepBuilding;
     }
   }
-  let htmlGenerator = new htmlBuilder(fullTeam);
-  console.log(htmlGenerator.renderHtml());
+  // let htmlGenerator = new htmlBuilder(fullTeam);
+  // let htmlOut = htmlGenerator.renderHtml();
+
+  // fs.writeFile('index.html',htmlOut,err => {
+  //   console.log(err ? 'Failure':'Success');
+  // });
 };
-// TODO: Team member loop for adding multiple team members
-// TODO: Create webpage template
-// TODO: Generate HTML for manager card
-// TODO: Generate HTML for team member card
-// TODO: Write HTML to index.html
 init();
