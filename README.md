@@ -6,6 +6,7 @@ The goal of this project was to create a node application that can generate a ht
 
 ## Table of Contents
 
+- [Video Walkthrough](#walkthrough)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Testing](#testing)
@@ -13,7 +14,7 @@ The goal of this project was to create a node application that can generate a ht
 - [Questions](#questions)
 - [License](#license)
 
-# Walkthrough Video
+# Walkthrough
 [Video Sample](https://youtu.be/PEOoQzEkoWY)
 
 ## Installation
