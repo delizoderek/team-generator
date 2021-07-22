@@ -13,6 +13,9 @@ The goal of this project was to create a node application that can generate a ht
 - [Questions](#questions)
 - [License](#license)
 
+# Walkthrough Video
+[Video Sample](https://youtu.be/PEOoQzEkoWY)
+
 ## Installation
 
 To install this application: first clone the repository, then install the required packages using `npm init`
