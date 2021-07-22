@@ -1,8 +1,8 @@
 const inquire = require("inquirer");
 const fs = require('fs');
-const htmlBuilder = require("./lib/htmlBuilder");
-// TODO: Initial team manager question
-const commonQuestion = {
+const HtmlBuilder = require("./helper/htmlBuilder");
+
+const wrapupQuestion = {
   type: "list",
   name: "keepBuilding",
   message: "Would you like to add a team member or wrap-up your team?",
@@ -11,9 +11,9 @@ const commonQuestion = {
     if (val === "Wrap-up your team") {
       return "w";
     } else if (val === "Add an Intern") {
-      return "Intern";
+      return "i";
     } else {
-      return "Engineer";
+      return "e";
     }
   },
 };
@@ -56,33 +56,33 @@ const managerQuestions = [
     name: "managerEmail",
     message: "What is your email?",
     validate: (val) => {
-      if(val.match("^[^@\s]+@[^@\s]+\.[^@\s]+$") === null){
+      if(val.match("^[a-z0-9][-a-z0-9._]+@([-a-z0-9]+.)+[a-z]{2,5}$") === null){
         return 'please enter a valid email address';
       } else {
         return true;
       }
     }
   },
-  commonQuestion,
+  wrapupQuestion,
 ];
 
-const memberQuestions = [
+const engineerQuestions = [
   {
     type: "input",
-    name: "memberName",
+    name: "engineerName",
     message: "What is their name?",
   },
   {
     type: "number",
-    name: "memberId",
+    name: "engineerId",
     message: "What is their ID?",
   },
   {
     type: "input",
-    name: "memberEmail",
+    name: "engineerEmail",
     message: "What is their email?",
     validate: (val) => {
-      if(val.match("^[^@\s]+@[^@\s]+\.[^@\s]+$") === null){
+      if(val.match("^[a-z0-9][-a-z0-9._]+@([-a-z0-9]+.)+[a-z]{2,5}$") === null){
         return 'please enter a valid email address';
       } else {
         return true;
@@ -91,10 +91,10 @@ const memberQuestions = [
   },
   {
     type: "input",
-    name: "memberGit",
+    name: "engineerGit",
     message: "What is their Github username?",
   },
-  commonQuestion,
+  wrapupQuestion,
 ];
 
 const internQuestions = [
@@ -105,15 +105,15 @@ const internQuestions = [
   },
   {
     type: "number",
-    name: "memberId",
+    name: "internId",
     message: "What is their ID?",
   },
   {
     type: "input",
-    name: "memberEmail",
+    name: "internEmail",
     message: "What is their email?",
     validate: (val) => {
-      if(val.match("^[^@\s]+@[^@\s]+\.[^@\s]+$") === null){
+      if(val.match("^[a-z0-9][-a-z0-9._]+@([-a-z0-9]+.)+[a-z]{2,5}$") === null){
         return 'please enter a valid email address';
       } else {
         return true;
@@ -122,17 +122,16 @@ const internQuestions = [
   },
   {
     type: "input",
-    name: "memberGit",
+    name: "internSchool",
     message: "What school did they attend?",
   },
-  commonQuestion,
+  wrapupQuestion,
 ];
 
 const fullTeam = {
   teamName: "",
   manager: new Manager(),
-  engineers: [],
-  interns: [],
+  members: [],
 };
 
 function Manager() {
@@ -142,12 +141,52 @@ function Manager() {
   this.email = "";
 }
 
-function TeamMember(role) {
+function TeamMember() {
   this.name = "";
-  this.role = role;
+  this.role = "";
   this.id = 0;
   this.email = "";
   this.github = "";
+  this.school = "";
+}
+
+const buildHTML = (teamObj) => {
+  let htmlGenerator = new HtmlBuilder(teamObj);
+  let htmlOut = htmlGenerator.renderHtml();
+
+  fs.writeFile('./dist/index.html',htmlOut,err => {
+    console.log(err ? 'Failed to write index.html':'Successfully created index.html');
+  });
+}
+
+const addEngineer = async() => {
+  const newEngineer = new TeamMember();
+  newEngineer.role = 'e';
+
+  const engineerPromise = await inquire.prompt(engineerQuestions);
+
+  newEngineer.name = engineerPromise.engineerName;
+  newEngineer.id = engineerPromise.engineerId;
+  newEngineer.email = engineerPromise.engineerEmail;
+  newEngineer.github = engineerPromise.engineerGit;
+  fullTeam.members.push(newEngineer);
+
+  return engineerPromise.keepBuilding;
+}
+
+const addIntern = async() => {
+  const newIntern = new TeamMember();
+  newIntern.role = 'i';
+
+  const internPromise = await inquire.prompt(internQuestions);
+
+  newIntern.name = internPromise.internName;
+  newIntern.id = internPromise.internId;
+  newIntern.email = internPromise.internEmail;
+  newIntern.school = internPromise.internSchool;
+  fullTeam.members.push(newIntern);
+
+  return internPromise.keepBuilding;
 }
 
 const init = async () => {
@@ -167,27 +206,15 @@ const init = async () => {
 
   // memberRole needs to have a value that is not w before entering the loop
   while (contTeamBuilding) {
-    const newMember = new TeamMember(memberRole);
-    const memberPromise = await inquire.prompt(memberQuestions);
-
-    newMember.name = memberPromise.memberName;
-    newMember.id = memberPromise.memberId;
-    newMember.email = memberPromise.memberEmail;
-    newMember.github = memberPromise.memberGit;
-
-    fullTeam.members.push(newMember);
-
-    if (memberPromise.keepBuilding === "w") {
-      contTeamBuilding = false;
+    if(memberRole === "e"){
+      memberRole = await addEngineer();
     } else {
-      memberRole = memberPromise.keepBuilding;
+      memberRole = await addIntern();
     }
-  }
-  // let htmlGenerator = new htmlBuilder(fullTeam);
-  // let htmlOut = htmlGenerator.renderHtml();
 
-  // fs.writeFile('index.html',htmlOut,err => {
-  //   console.log(err ? 'Failure':'Success');
-  // });
+    contTeamBuilding = memberRole !== "w";
+  }
+
+  buildHTML(fullTeam);
 };
 init();

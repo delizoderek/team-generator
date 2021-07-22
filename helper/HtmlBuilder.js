@@ -1,5 +1,6 @@
-const Manager = require("./Manager");
-const TeamMember = require("./teamMember");
+const Manager = require("../lib/Manager");
+const Engineer = require("../lib/Engineer");
+const Intern = require("../lib/Intern");
 
 class HtmlBuilder {
   constructor(fullTeam) {
@@ -10,17 +11,32 @@ class HtmlBuilder {
       fullTeam.manager.email,
       fullTeam.manager.office
     );
-    this.memberList = [];
-    for (let member of fullTeam.members) {
-      const newTeammate = new TeamMember(
-        member.name,
-        member.id,
-        member.role,
-        member.email,
-        member.github
-      );
-      this.memberList.push(newTeammate);
+    this.memberList = this.loadTeamList(fullTeam.members);
+  }
+
+  loadTeamList(membersArr){
+    const outArr = [];
+    for(let member of membersArr){
+      if(member.role === 'e'){
+        const newEngineer = new Engineer(
+          member.name,
+          member.id,
+          member.email,
+          member.github
+        );
+        outArr.push(newEngineer);
+      } else {
+        const newIntern = new Intern(
+          member.name,
+          member.id,
+          member.email,
+          member.school
+        );
+          outArr.push(newIntern);
+      }
     }
+
+    return outArr;
   }
 
   getManagerCard() {
@@ -56,14 +72,14 @@ class HtmlBuilder {
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>${this.teamName} Homepage</title>
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
         crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
     </head>
     <body>
         ${this.getBody()}
@@ -79,10 +95,6 @@ class HtmlBuilder {
     </body>
 </html>`;
   }
-  // TODO: Get HTML for manager card
-  // TODO: Build HTML for team member list
-  // TODO: Load in generated html into page layout
-  // TODO: return the html string, to be written to a file
 }
 
 module.exports = HtmlBuilder;
